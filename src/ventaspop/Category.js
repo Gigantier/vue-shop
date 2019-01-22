@@ -12,6 +12,9 @@ export default {
     });
     return categories;
   },
+  async getCategory(id) {
+    return Repository.get(`${resource}/${id}`);
+  },
   url(category) {
     const path = category.name.toLowerCase().trim().replace(' ', '-');
     return encodeURI(`/catalogo/${category.id}-${path}`);

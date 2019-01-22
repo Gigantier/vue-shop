@@ -1,5 +1,5 @@
 <template>
-  <ul class="listing">
+  <ul class="listing" :class="{ list: list }">
     <li v-for="(product, index) in products" v-bind:key="index" class="analyticsProduct" :class="{ agotado: !product.stock }" :data-id="product.id" itemscope itemtype="http://schema.org/Product" :data-manufacturer="product.manufacturer">
       <form method="post">
         <router-link :to="product.url">
@@ -41,7 +41,19 @@ export default {
   name: 'ProductList',
   mixins: [GigantierShop],
   props: {
+    categoryId: {
+      type: Number,
+      required: false,
+    },
+    attributes: {
+      type: Object,
+      required: false,
+    },
     home: {
+      type: Boolean,
+      required: false,
+    },
+    list: {
       type: Boolean,
       required: false,
     },
@@ -49,12 +61,35 @@ export default {
       type: Number,
       required: false,
     },
+    sort: {
+      type: String,
+      required: false,
+    },
   },
   data: () => ({
     products: [],
   }),
+  methods: {
+    load() {
+      product.get(this.$props).then((products) => {
+        this.products = products.data.products;
+        this.$emit('attributesChanged', products.data.attributes);
+      });
+    },
+  },
   created() {
-    product.get(this.$props).then((products) => { this.products = products.data; });
+    this.load();
+  },
+  watch: {
+    categoryId() {
+      this.load();
+    },
+    home() {
+      this.load();
+    },
+    sort() {
+      this.load();
+    },
   },
 };
 </script>

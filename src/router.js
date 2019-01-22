@@ -13,6 +13,11 @@ export default new Router({
       component: () => import('./components/Home.vue'),
     },
     {
+      path: '/catalogo/:id-*',
+      name: 'Category',
+      component: () => import('./components/Category.vue'),
+    },
+    {
       path: '/paginas/:id-*',
       name: 'Page',
       component: () => import('./components/Page.vue'),

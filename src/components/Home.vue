@@ -22,27 +22,27 @@
           </li>
           <li class="views">
             <h2>Vistas</h2>
-            <a href="" class="view grid active">Grilla</a>
-            <a href="" class="view list">Lista</a>
+            <a href="#" class="view grid" :class="{ active: !list }" @click.prevent="list = false">Grilla</a>
+            <a href="#" class="view list" :class="{ active: list }" @click.prevent="list = true">Lista</a>
           </li>
         </ul>
       
       </aside>
     
-    <div class="content">
-    
-      <div class="banners">
-        <a :href="banner.link" :target="(banner.blank ? '_blank' : '')" v-for="(banner, index) in banners.bottom" v-bind:key="index">
-          <img :src="banner.image" />
-        </a>
+      <div class="content">
+      
+        <div class="banners">
+          <a :href="banner.link" :target="(banner.blank ? '_blank' : '')" v-for="(banner, index) in banners.bottom" v-bind:key="index">
+            <img :src="banner.image" />
+          </a>
+        </div>
+      
+        <h2>Productos <strong>destacados</strong></h2>
+        <ProductList :home="true" :limit="8" :list="list"></ProductList>
+      
       </div>
-    
-      <h2>Productos <strong>destacados</strong></h2>
-      <ProductList :home="true" :limit="8"></ProductList>
-    
-    </div>
   
-  </div>
+    </div>
   
   </div>
 </template>
@@ -64,6 +64,7 @@ export default {
   },
   data: () => ({
     banners: { top: [], bottom: [] },
+    list: false,
   }),
   created() {
     banner.get('home-carrousel-desktop').then((banners) => { this.banners.top = banners.data; });

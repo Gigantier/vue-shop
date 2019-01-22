@@ -66,6 +66,14 @@ app.get('/Category', function(req, res) {
   });
 });
 
+app.get('/Category/:id', function(req, res) {
+  apiClient.call('/Category/list/'+req.params.id).then((data) => {
+    res.json(data);
+  }).catch((data) => {
+    res.status(400).json(data);
+  });
+});
+
 app.post('/User/login', function(req, res) {
   apiClient.authenticate(req.body.email, req.body.pwd).then((data) => {
     delete data.clientId;    
@@ -92,8 +100,20 @@ app.get('/Banner', function(req, res) {
 });
 
 app.get('/Product', function(req, res) {
-  apiClient.call('/Product/list', req.query).then((data) => {
-    res.json(data.products);
+  
+  let endpoint = '/Product/list';
+  if(req.query.categoryId > 0)
+    endpoint = '/Product/listForCategory/'+req.query.categoryId;
+  
+  if(req.query.sort) {
+    req.query.sortField = req.query.sort;
+    if(req.query.sort == 'created') {
+      req.query.sortWay = 'desc';
+    }
+  }
+  
+  apiClient.call(endpoint, req.query).then((data) => {
+    res.json(data);
   }).catch((data) => {
     res.status(400).json(data);
   });
